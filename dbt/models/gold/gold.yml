@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: fct_trips
+    description: "Fact table for all yellow taxi trips"
+    columns:
+      - name: vendorid
+        tests:
+          - not_null
+      - name: trip_distance
+        tests:
+          - not_null
+      - name: total_amount
+        tests:
+          - not_null
+      - name: pickup_location_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_locations')
+              field: location_id
+
+  - name: dim_locations
+    description: "Zone dimension table based on coordinate boundaries"
+    columns:
+      - name: location_id
+        tests:
+          - unique
+          - not_null
+      - name: zone_name
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_vendor
+    description: "Vendor dimension table"
+    columns:
+      - name: vendor_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_rate
+    description: "Rate code dimension table"
+    columns:
+      - name: rate_id
+        tests:
+          - unique
+          - not_null

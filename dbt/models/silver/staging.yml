@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: stg_trips
+    description: "Cleaned and typed staging layer for yellow taxi trips"
+    columns:
+      - name: vendorid
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2]
+      - name: tpep_pickup_datetime
+        tests:
+          - not_null
+      - name: trip_distance
+        tests:
+          - not_null
+      - name: total_amount
+        tests:
+          - not_null
+      - name: payment_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: pickup_location_id
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      - name: time_of_day
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['morning', 'afternoon', 'evening', 'night']

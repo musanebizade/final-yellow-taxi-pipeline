@@ -1,0 +1,19 @@
+# credentials
+.env
+profiles.yml
+
+# airflow
+logs/
+config/
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/.user.yml
+
+# python
+__pycache__/
+*.pyc
+
+
+logs/

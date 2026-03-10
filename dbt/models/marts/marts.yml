@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: mart_monthly_summary
+    description: "Monthly aggregated summary of trips by vendor and rate"
+    columns:
+      - name: ride_month
+        tests:
+          - not_null
+      - name: ride_count
+        tests:
+          - not_null
+
+  - name: mart_top_zones
+    description: "Top 5 pickup zones by trip count"
+    columns:
+      - name: location_id
+        tests:
+          - not_null
+      - name: pickup_count
+        tests:
+          - not_null
+
+  - name: mart_payment_breakdown
+    description: "Trip analysis broken down by payment method"
+    columns:
+      - name: payment_method
+        tests:
+          - not_null
+      - name: trip_count
+        tests:
+          - not_null
