@@ -1,35 +1,30 @@
 # Yellow Taxi Pipeline
-This project is an end-to-end data pipeline that ingests NYC Yellow Taxi Trip Data, transforms it using dbt and loads it into a PostgreSQL data warehouse.
+This project is an end-to-end data pipeline that ingests NYC Yellow Taxi Trip Data, transforms it using dbt and PySpark, and loads it into a PostgreSQL data warehouse.
 The goal was to take raw data and turn it into clean and business-ready tables using data engineering tools.
 
 
 ##  Tools & Technologies
-- **Apache Airflow** - pipeline orchestration
-- **DBT** - transforming data
+- **Apache Airflow** - Pipeline orchestration
+- **DBT** - Transforming data
 - **PostgreSQL** - Data warehouse
 - **Docker** - Containerization 
-- **Python** - Ingestion scripting
+- **Python** - Scripting
+- **PySpark** - Data ingestion and transformation
 
 ##  Architecture
-The pipeline automatically ingests raw trip data into PostgreSQL, transforms it through multiple layers using dbt (staging, gold, marts) and orchestrates 
-the entire process with Apache Airflow. Everything runs inside Docker containers.
+The pipeline is divided into 7 separate DAGs, each responsible for one layer. DAGs are connected using Airflow's dataset-based scheduling — when one DAG finishes,
+it emits a signal that automatically triggers the next one.
+
+`dag_start` is the only scheduled DAG, running every day at 00:06.
+
 
 ## Pipeline Flow
-```
-ingest_csv_to_postgres
-        └── dbt_stg_trips
-                └── dbt_test_staging
-                        └── dbt_seed
-                                ├── dbt_fct_trips ──┐
-                                ├── dbt_dim_vendor ─┼── dbt_test_gold
-                                └── dbt_dim_rate ───┘        └── dbt_mart_monthly_summary
-                                                                        └── dbt_test_marts
-```
+<img width="974" height="592" alt="image" src="https://github.com/user-attachments/assets/e3bd2f13-e7d2-41a1-ba6d-e944f0876d61" />
 
 ## Data Layers
 
-- **Raw** - raw ingested data 
-- **Silver** - cleaned and structured data
+- **Raw** - raw ingested data with minimal changes
+- **Silver** - cleaned and structured data, invalid records filtered out
 - **Gold** - fact and dimension tables
 - **Mart** - aggregated business-ready tables
 
@@ -44,8 +39,8 @@ ingest_csv_to_postgres
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/musanebizade/yellow-taxi-pipeline.git
-cd yellow-taxi-pipeline
+git clone https://github.com/musanebizade/final-yellow-taxi-pipeline.git
+cd final-yellow-taxi-pipeline
 ```
 
 **2. Add your CSV file**
@@ -61,10 +56,14 @@ Create a `.env` file in the root of the project with the following content:
 ```dotenv
 AIRFLOW_UID=50000
 AIRFLOW_PROJ_DIR=.
-AIRFLOW_IMAGE_NAME=apache/airflow:3.1.7
 _AIRFLOW_WWW_USER_USERNAME=your_username
 _AIRFLOW_WWW_USER_PASSWORD=your_password
 AIRFLOW__API_AUTH__JWT_SECRET=your_secret_key
+TARGET_DB_USER=postgres
+TARGET_DB_PASSWORD=your_db_password
+TARGET_DB_HOST=target-db
+TARGET_DB_PORT=5432
+TARGET_DB_NAME=postgres
 ```
 
 **4. Build the Docker image**
@@ -88,14 +87,14 @@ Go to `http://localhost:8080` and login with the credentials you set in `.env`
 
 **8. Trigger the pipeline**
 
-Find the `yellow_taxi_pipeline` DAG and click the play button to run it
+Find `dag_start` and click the trigger button. It will automatically chain through all 7 DAGs
 
 **9. View the results**
 
 Connect DBeaver to:
 ```
 Host:     localhost
-Port:     5432
+Port:     5434
 Database: postgres
 Username: postgres
 Password: your_password
@@ -103,6 +102,5 @@ Password: your_password
 
 ## What I Learned
 
-In this project I learned the fundamentals of building a data pipeline  from scratch. I understood what Apache Airflow is and how to create a DAG with tasks that depend on each other. 
-I learned what dbt is and how it transforms raw data into clean, structured tables using SQL models. One of the key concepts 
-I understood is the difference between `source()` and `ref()` in dbt — source points to tables that were not created by dbt itself, while ref() refers to tables that dbt manages itself.  I also learned about Medallion architecture and how it organizes data with layers. I learned why Docker is important and how to create containers. 
+In this project I learned the fundamentals of building a data pipeline  from scratch. I understood what Apache Airflow is and how to create DAGs with tasks that depend on
+each other. I learned what dbt is and how it transforms raw data into clean, structured tables using SQL models. Difference between `source()` and `ref()`. I learned how PySpark processes large data in partitions, what JDBC is, and why Java is required for PySpark. I also learned how to separate a pipeline into multiple DAGs connected via dataset-based scheduling, and how `trigger_rule="all_done"` allows a pipeline to continue even when a task fails.  I also learned about Medallion architecture and how it organizes data with layers. I learned why Docker is important and how to create containers. 
