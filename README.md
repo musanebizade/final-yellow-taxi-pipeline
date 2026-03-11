@@ -30,7 +30,7 @@ it emits a signal that automatically triggers the next one.
 - **Gold** - fact and dimension tables
 - **Mart** - aggregated business-ready tables
 
-## dbt Models
+### dbt Models
 
 | Model | Layer | Description |
 |-------|-------|-------------|
