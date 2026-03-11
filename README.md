@@ -4,12 +4,12 @@ The goal was to take raw data and turn it into clean and business-ready tables u
 
 
 ##  Tools & Technologies
-- **Apache Airflow** - Pipeline orchestration
-- **DBT** - Transforming data
-- **PostgreSQL** - Data warehouse
-- **Docker** - Containerization 
-- **Python** - Scripting
-- **PySpark** - Data ingestion and transformation
+- <img src="https://img.shields.io/badge/Apache%20Airflow-0176D2?style=for-the-badge&logo=Apache%20Airflow&logoColor=white" alt="Airflow">
+- <img src="https://img.shields.io/badge/dbt-FF694B?style=for-the-badge&logo=dbt&logoColor=white" alt="dbt">
+- <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+- <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+- ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+- <img src="https://img.shields.io/badge/PySpark-E25A1C?style=for-the-badge&logo=apache-spark&logoColor=white" alt="PySpark">
 
 ##  Architecture
 The pipeline is divided into 7 separate DAGs, each responsible for one layer. DAGs are connected using Airflow's dataset-based scheduling — when one DAG finishes,
@@ -18,8 +18,10 @@ it emits a signal that automatically triggers the next one.
 `dag_start` is the only scheduled DAG, running every day at 00:06.
 
 
-## Pipeline Flow
-<img width="974" height="592" alt="image" src="https://github.com/user-attachments/assets/e3bd2f13-e7d2-41a1-ba6d-e944f0876d61" />
+### Pipeline Flow
+<p align="center">
+<img width="70%" alt="image" src="https://github.com/user-attachments/assets/e3bd2f13-e7d2-41a1-ba6d-e944f0876d61" />
+</p>
 
 ## Data Layers
 
@@ -27,6 +29,19 @@ it emits a signal that automatically triggers the next one.
 - **Silver** - cleaned and structured data, invalid records filtered out
 - **Gold** - fact and dimension tables
 - **Mart** - aggregated business-ready tables
+
+## dbt Models
+
+| Model | Layer | Description |
+|-------|-------|-------------|
+| stg_trips | Silver | Cleans raw data and extracts new columns |
+| fct_trips | Gold | Main fact table with all trip records |
+| dim_vendor | Gold | Vendor lookup table |
+| dim_rate | Gold | Rate code lookup table |
+| dim_locations | Gold | Zone dimension based on coordinate boundaries |
+| mart_monthly_summary | Mart | Monthly trip statistics by vendor |
+| mart_top_zones | Mart | Top 5 pickup zones by trip count |
+| mart_payment_breakdown | Mart | Trip analysis by payment method |
 
 ## How to Run
 
