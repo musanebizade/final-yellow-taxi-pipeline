@@ -23,6 +23,45 @@ it emits a signal that automatically triggers the next one.
 <img width="70%" alt="image" src="https://github.com/user-attachments/assets/e3bd2f13-e7d2-41a1-ba6d-e944f0876d61" />
 </p>
 
+## Project Structure
+```
+final-yellow-taxi-pipeline/
+├── dags/
+│   ├── dag_start.py
+│   ├── dag_ingestion.py
+│   ├── dag_staging.py
+│   ├── dag_seeds.py
+│   ├── dag_gold.py
+│   ├── dag_marts.py
+│   ├── dag_end.py
+│   └── scripts/
+│       ├── ingest_trips.py
+│       └── transform_trips.py
+├── dbt/
+│   ├── models/
+│   │   ├── staging/
+│   │   │   └── stg_trips.sql
+│   │   ├── gold/
+│   │   │   ├── fct_trips.sql
+│   │   │   ├── dim_vendor.sql
+│   │   │   ├── dim_rate.sql
+│   │   │   └── dim_locations.sql
+│   │   └── marts/
+│   │       ├── mart_monthly_summary.sql
+│   │       ├── mart_top_zones.sql
+│   │       └── mart_payment_breakdown.sql
+│   └── seeds/
+│       ├── dim_vendor.csv
+│       ├── dim_rate.csv
+│       ├── taxi_zones.csv
+│       └── payment_types.csv
+├── data/
+│   └── yellow_taxi.csv
+├── Dockerfile
+├── docker-compose.yaml
+└── .env
+```
+
 ## Data Layers
 
 - **Raw** - raw ingested data with minimal changes
@@ -114,6 +153,12 @@ Database: postgres
 Username: postgres
 Password: your_password
 ```
+
+## Dataset
+
+NYC Taxi 2015 dataset was used for this project. You can download it from Kaggle: 
+
+https://www.kaggle.com/datasets/elemento/nyc-yellow-taxi-trip-data
 
 ## What I Learned
 
