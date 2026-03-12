@@ -1,5 +1,5 @@
 # Yellow Taxi Pipeline
-This project is an end-to-end data pipeline that ingests NYC Yellow Taxi Trip Data, transforms it using dbt and PySpark, and loads it into a PostgreSQL data warehouse.
+This project is an end-to-end data pipeline that ingests NYC Yellow Taxi Trip Data, transforms it through bronze, silver, gold layers using dbt and PySpark, loads it into a PostgreSQL data warehouse and orchestrates the entire process with Apache Airflow. Everything runs inside Docker containers.
 The goal was to take raw data and turn it into clean and business-ready tables using data engineering tools.
 
 
